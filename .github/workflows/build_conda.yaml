@@ -17,16 +17,22 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Conda environment creation and activation
-        uses: conda-incubator/setup-miniconda@v2
+        uses: conda-incubator/setup-miniconda@v3
         with:
+          auto-update-conda: true
           python-version: ${{ matrix.python-version }}
           environment-file: env.yaml
           activate-environment: build
-          auto-update-conda: true
           auto-activate-base: false
           show-channel-urls: true
+      - name: Conda info
+        shell: bash -el {0}
+        run: conda info
+      - name: Conda list
+        shell: pwsh
+        run: conda list
       - name: Build and upload the conda packages
         uses: uibcdf/action-build-and-upload-conda-packages@v1.1-beta.1
         with:
