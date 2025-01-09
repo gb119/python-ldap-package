@@ -1,0 +1,54 @@
+
+{% set name = "python-ldap" %}
+{% set version = "3.4.4" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: 7edb0accec4e037797705f3a05cbf36a9fde50d08c8f67f2aef99a2628fab828
+
+build:
+  number: 0
+  skip: true  # [win]
+  script: '{{ PYTHON }} -m pip install . --no-deps --ignore-installed -vvv '
+
+requirements:
+  build:
+    - python                                 # [build_platform != target_platform]
+    - cross-python_{{ target_platform }}     # [build_platform != target_platform]
+    - {{ compiler('c') }}
+  host:
+    - pip
+    - setuptools
+    - python
+    - pyasn1
+    - pyasn1-modules
+    - openldap >=2.4.11
+  run:
+    - python
+    - pyasn1
+    - pyasn1-modules
+    - openldap >=2.4.11
+
+test:
+  imports:
+    - ldap
+    - ldap.controls
+    - ldap.extop
+    - ldap.schema
+
+about:
+  home: https://www.python-ldap.org/
+  license: Python Software Foundation
+  license_family: OTHER
+  license_file: LICENCE
+  summary: Python modules for implementing LDAP clients
+  doc_url: https://www.python-ldap.org/en/latest/
+  dev_url: https://github.com/python-ldap/python-ldap
+
+extra:
+  recipe-maintainers:
+    - mariusvniekerk
